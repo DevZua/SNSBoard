@@ -33,7 +33,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostPostRequestBody postPostRequestBody) {
-        Post post = postService.createPost(postPostRequestBody);
+        var post = postService.createPost(postPostRequestBody);
         return ResponseEntity.ok(post);
     }
 }
