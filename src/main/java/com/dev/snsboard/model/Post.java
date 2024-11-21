@@ -8,6 +8,13 @@ public class Post {
     private String body;
     private ZonedDateTime createdDateTime;
 
+
+    public Post(Long postId, String body, ZonedDateTime createdDateTime) {
+        this.postId = postId;
+        this.body = body;
+        this.createdDateTime = createdDateTime;
+    }
+
     public Long getPostId() {
         return postId;
     }
@@ -55,11 +62,5 @@ public class Post {
                 + ", createdDateTime="
                 + createdDateTime
                 + '}';
-    }
-
-    public Post(Long postId, String body, ZonedDateTime createdDateTime) {
-        this.postId = postId;
-        this.body = body;
-        this.createdDateTime = createdDateTime;
     }
 }
