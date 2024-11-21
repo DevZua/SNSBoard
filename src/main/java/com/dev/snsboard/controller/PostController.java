@@ -44,4 +44,11 @@ public class PostController {
         var post = postService.updatePost(postId, postPatchRequestBody);
         return ResponseEntity.ok(post);
     }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        // 204 No Content
+        return ResponseEntity.noContent().build();
+    }
 }

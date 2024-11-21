@@ -53,4 +53,16 @@ public class PostService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.");
         }
     }
+
+    public void deletePost(Long postId) {
+        Optional<Post> postOptional=
+                posts.stream().filter(post -> postId.equals(post.getPostId())).findFirst();
+
+        if (postOptional.isPresent()) {
+            posts.remove(postOptional.get());
+        } else {
+            // 404 error
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.");
+        }
+    }
 }
