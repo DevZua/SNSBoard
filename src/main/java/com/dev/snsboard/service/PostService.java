@@ -3,32 +3,40 @@ package com.dev.snsboard.service;
 import com.dev.snsboard.model.Post;
 import com.dev.snsboard.model.PostPatchRequestBody;
 import com.dev.snsboard.model.PostPostRequestBody;
+import com.dev.snsboard.repository.PostEntityRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PostService {
 
-    private static final List<Post> posts = new ArrayList<>();
+    @Autowired
+    private PostEntityRepository postEntityRepository;
 
-    static {
-        posts.add(new Post(1L, "Post 1", ZonedDateTime.now()));
-        posts.add(new Post(2L, "Post 2", ZonedDateTime.now()));
-        posts.add(new Post(3L, "Post 3", ZonedDateTime.now()));
-    }
-
+    // 모든 게시물 조회
     public List<Post> getPosts() {
-        return posts;
+        // 내부적으로 적절한 SQL로 변환되어 실행됨.
+        var postEntities = postEntityRepository.findAll();
+
+        // RepositoryfindAll을 통해 가져온 Entity List를 map을 통해서 post Record로 변환한 다음에 List로 만들어 리턴
+        return postEntities.stream().map(Post::from).toList();
     }
 
-    public Optional<Post> getPostByPostId(Long postId) {
-        return posts.stream().filter(post -> postId.equals(post.getPostId())).findFirst();
+    public Post getPostByPostId(Long postId) {
+        var postEntity =
+                postEntityRepository
+                        .findById(postId)
+                        .orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.")
+                        );
+
+        return Post.from(postEntity);
     }
 
     public Post createPost(PostPostRequestBody postPostRequestBody) {
