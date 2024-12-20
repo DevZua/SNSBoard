@@ -31,11 +31,11 @@ public class PostService {
 
     public Post getPostByPostId(Long postId) {
         var postEntity =
-                postEntityRepository
-                        .findById(postId)
-                        .orElseThrow(
-                                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.")
-                        );
+            postEntityRepository
+                    .findById(postId)
+                    .orElseThrow(
+                            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.")
+                    );
 
         return Post.from(postEntity);
     }
@@ -51,28 +51,22 @@ public class PostService {
     }
 
     public Post updatePost(Long postId, PostPatchRequestBody postPatchRequestBody) {
-        Optional<Post> postOptional=
-                posts.stream().filter(post -> postId.equals(post.getPostId())).findFirst();
-
-        if (postOptional.isPresent()) {
-            Post postToUpdate = postOptional.get();
-            postToUpdate.setBody(postPatchRequestBody.body());
-            return postToUpdate;
-        } else {
-            // 404 error
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.");
-        }
+        var postEntity =
+            postEntityRepository
+                .findById(postId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found."));
+        postEntity.setBody(postPatchRequestBody.body());
+        var updatedPostEntity = postEntityRepository.save(postEntity);
+        return Post.from(updatedPostEntity);
     }
 
     public void deletePost(Long postId) {
-        Optional<Post> postOptional=
-                posts.stream().filter(post -> postId.equals(post.getPostId())).findFirst();
-
-        if (postOptional.isPresent()) {
-            posts.remove(postOptional.get());
-        } else {
-            // 404 error
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.");
-        }
+        var postEntity =
+            postEntityRepository
+                .findById(postId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found."));
+        postEntityRepository.delete(postEntity);
     }
 }
