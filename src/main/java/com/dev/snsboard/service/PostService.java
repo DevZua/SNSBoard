@@ -3,6 +3,7 @@ package com.dev.snsboard.service;
 import com.dev.snsboard.model.Post;
 import com.dev.snsboard.model.PostPatchRequestBody;
 import com.dev.snsboard.model.PostPostRequestBody;
+import com.dev.snsboard.model.entity.PostEntity;
 import com.dev.snsboard.repository.PostEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,12 +41,13 @@ public class PostService {
     }
 
     public Post createPost(PostPostRequestBody postPostRequestBody) {
-        var newPostId = posts.stream().mapToLong(Post::getPostId).max().orElse(0L) + 1;
+        // 새로운 post data 를 만들기 위해서 생성
+        var postEntity = new PostEntity();
+        postEntity.setBody(postPostRequestBody.body());
+        // 실제 저장 수행 하여 변수로 받기
+        var savedPostEntity = postEntityRepository.save(postEntity);
+        return Post.from(savedPostEntity);
 
-        var newPost = new Post(newPostId, postPostRequestBody.body(), ZonedDateTime.now());
-        posts.add(newPost);
-
-        return newPost;
     }
 
     public Post updatePost(Long postId, PostPatchRequestBody postPatchRequestBody) {

@@ -80,4 +80,19 @@ public class PostEntity {
     public int hashCode() {
         return Objects.hash(getPostId(), getBody(), getCreatedDateTime(), getUpdatedDateTime(), getDeletedDateTime());
     }
+
+    /*
+    @PrePersist, @PreUpdate
+    JPA 에 의해서 실제 데이터가 내부에 저장(수정)되기 직전에 원하는 로직을 수행할 수 있다.
+     */
+    @PrePersist
+    private void prePersist() {
+        this.createdDateTime = ZonedDateTime.now();
+        this.updatedDateTime = this.createdDateTime;
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        this.updatedDateTime = ZonedDateTime.now();
+    }
 }
