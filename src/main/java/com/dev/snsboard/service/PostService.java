@@ -1,5 +1,6 @@
 package com.dev.snsboard.service;
 
+import com.dev.snsboard.exception.post.PostNotFoundException;
 import com.dev.snsboard.model.Post;
 import com.dev.snsboard.model.PostPatchRequestBody;
 import com.dev.snsboard.model.PostPostRequestBody;
@@ -31,11 +32,11 @@ public class PostService {
 
     public Post getPostByPostId(Long postId) {
         var postEntity =
-            postEntityRepository
-                    .findById(postId)
-                    .orElseThrow(
-                            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found.")
-                    );
+                postEntityRepository
+                        .findById(postId)
+                        .orElseThrow(
+                                () -> new PostNotFoundException(postId)
+                        );
 
         return Post.from(postEntity);
     }
@@ -55,7 +56,7 @@ public class PostService {
             postEntityRepository
                 .findById(postId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found."));
+                        () -> new PostNotFoundException(postId));
         postEntity.setBody(postPatchRequestBody.body());
         var updatedPostEntity = postEntityRepository.save(postEntity);
         return Post.from(updatedPostEntity);
@@ -66,7 +67,7 @@ public class PostService {
             postEntityRepository
                 .findById(postId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found."));
+                        () -> new PostNotFoundException(postId));
         postEntityRepository.delete(postEntity);
     }
 }

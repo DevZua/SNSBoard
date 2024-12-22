@@ -21,7 +21,7 @@ spring:
       password: board-admin-password
 logging:
   level:
-    root: ERROR
+    root: INFO
 
 #logging:
 #  level:
