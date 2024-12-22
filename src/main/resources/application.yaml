@@ -19,6 +19,9 @@ spring:
     user:
       name: board-admin
       password: board-admin-password
+logging:
+  level:
+    root: ERROR
 
 #logging:
 #  level:
@@ -26,4 +29,5 @@ spring:
 #    org.hibernate.orm.jdbc.bind: TRACE
 #    org.hibernate.engine.transaction.internal.TransactionImpl: DEBUG
 #    org.springframework.orm.jpa: DEBUG
+
 #    org.springframework.transaction: DEBUG
