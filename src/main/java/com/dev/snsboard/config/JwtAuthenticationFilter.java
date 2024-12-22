@@ -1,5 +1,6 @@
 package com.dev.snsboard.config;
 
+import com.dev.snsboard.exception.jwt.JwtTokenNotFoundException;
 import com.dev.snsboard.service.JwtService;
 import com.dev.snsboard.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -35,6 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // request 로 부터 head 정보에 접근해서 AUTHORIZATION 값을 추출해 낸다.
         var authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         var securityContext = SecurityContextHolder.getContext();
+
+
+        if (ObjectUtils.isEmpty(authorization) || !authorization.startsWith(BEARER_PREFIX)) {
+            throw new JwtTokenNotFoundException();
+        }
+
 
            // authorization 비어 있지 않은 경우 & authorization 이 BEARER_PREFIX 로 시작하는 경우 JWT 인증 시작
         if (!ObjectUtils.isEmpty(authorization)
